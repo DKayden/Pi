@@ -19,9 +19,9 @@ def control_conveyor(string) -> str:
     
 def get_information_machine(string):
     if string.lower() == "upper":
-        return {client_modbus.read_holding_registers(INFORMATION_UPPER, 1)}
+        return client_modbus.read_holding_registers(INFORMATION_UPPER, 1)
     elif string.lower() == "lower":
-        return {client_modbus.read_holding_registers(INFORMATION_LOWER, 1)}
+        return client_modbus.read_holding_registers(INFORMATION_LOWER, 1)
     else:
         return {"message": "Vị trí không hợp lệ"}
 
