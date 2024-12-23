@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from modbus_client import ModbusClient
-from config import HOST_MODBUS_TCP, PORT_MODBUS_TCP, TYPE_MODBUS, LOWER_CONVEYOR, UPPER_CONVEYOR
+from config import HOST_MODBUS_TCP, PORT_MODBUS_TCP, TYPE_MODBUS, LOCATION
 from pi import control_conveyor, get_information_machine
 
 client_modbus = ModbusClient(HOST_MODBUS_TCP, PORT_MODBUS_TCP, TYPE_MODBUS)
@@ -39,3 +39,7 @@ async def get_information(position: str):
     # else:
     #     return {"message": "Vị trí không hợp lệ"}
     return get_information_machine(position)
+
+@app.get("/location")
+async def get_location():
+    return {LOCATION}
