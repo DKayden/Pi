@@ -1,5 +1,8 @@
 from modbus_client import ModbusClient
-from config import HOST_MODBUS_TCP, PORT_MODBUS_TCP, TYPE_MODBUS, INFORMATION_UPPER, INFORMATION_LOWER, LOWER_CONVEYOR, UPPER_CONVEYOR
+from config import (HOST_MODBUS_TCP, PORT_MODBUS_TCP, TYPE_MODBUS, INFORMATION_UPPER,
+                    INFORMATION_LOWER, LOWER_CONVEYOR, UPPER_CONVEYOR, PI_DESTINATION_HOST, PI_DESTINATION_PORT,
+                    LINE_ACTION, LOCATION, DESTINATION, POSITION_CHECK)
+import requests
 
 client_modbus = ModbusClient(host=HOST_MODBUS_TCP, port=PORT_MODBUS_TCP, type=TYPE_MODBUS)
 
@@ -25,5 +28,13 @@ def get_information_machine(string):
     else:
         return {"message": "Vị trí không hợp lệ"}
 
-
-
+def check_status_machine():
+    try:
+        status_destination = requests.get(f"http://{PI_DESTINATION_HOST}:{PI_DESTINATION_PORT}/information?position={POSITION_CHECK}")
+        status_machine = get_information_machine(POSITION_CHECK)
+        if status_machine == "1" and status_destination == "0":
+            return {"type" : LINE_ACTION, "location" : LOCATION, "destination" : DESTINATION}
+        else:
+            return None
+    except Exception as e:
+        return(f"Lỗi khi kiểm tra trạng thái: {e}")
